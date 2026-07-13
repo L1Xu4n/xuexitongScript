@@ -1,10 +1,10 @@
 # 学习通自动刷课脚本 V3 稳定版
 
-当前版本基于原始 `v3_optimized.js` 的主框架整理，只保留稳定可用的核心逻辑：
+当前版本以 `v3_optimized.js` 为唯一源码，油猴版由构建脚本生成。它聚焦于稳定播放与课程导航：
 
 - 自动播放视频
 - 视频结束后自动切换到下一小节
-- 章节测验页面自动跳过
+- 章节测验页面的受限跳转（最多尝试 3 次，防止循环）
 - 从“学习目标”步骤自动切到“视频”步骤
 - 手动点“2视频”页签后自动重新接管播放
 
@@ -12,12 +12,12 @@
 
 ## 文件说明
 
-- [v3_optimized.js](/E:/code/xuexitongScript-master/v3_optimized.js)
+- [v3_optimized.js](v3_optimized.js)
   控制台直接执行版本
-- [v3_optimized.user.js](/E:/code/xuexitongScript-master/v3_optimized.user.js)
+- [v3_optimized.user.js](v3_optimized.user.js)
   Tampermonkey 油猴版本
-- [test_serverchan_push.py](/E:/code/xuexitongScript-master/test_serverchan_push.py)
-  独立的 Server酱推送调试脚本
+- [scripts/build-userscript.mjs](scripts/build-userscript.mjs)
+  根据控制台版本生成油猴版
 
 ## 当前脚本行为
 
@@ -47,6 +47,7 @@ configs: {
     retryInterval: 2000,
     maxRetries: 10,
     videoCheckInterval: 1000,
+    autoAdvanceNoVideo: false,
 }
 ```
 
@@ -71,7 +72,7 @@ configs: {
 1. 打开学习通课程播放页
 2. 按 `F12`
 3. 进入 `Console`
-4. 复制 [v3_optimized.js](/E:/code/xuexitongScript-master/v3_optimized.js) 全部内容
+4. 复制 [v3_optimized.js](v3_optimized.js) 全部内容
 5. 粘贴并执行
 
 首次执行后可用：
@@ -84,11 +85,17 @@ app.nextUnit()
 ### 方法二：Tampermonkey
 
 1. 安装 Tampermonkey
-2. 导入 [v3_optimized.user.js](/E:/code/xuexitongScript-master/v3_optimized.user.js)
+2. 导入 [v3_optimized.user.js](v3_optimized.user.js)
 3. 确认脚本已启用
 4. 刷新学习通播放页面
 
 ## 已知说明
+
+### 0. 无视频或课件页面
+
+默认不会自动跳过无法识别的无视频页面，避免在课件未完成时反复触发“当前章节还有任务未完成”的平台提示。控制台会给出明确日志；确认当前节点无需处理后，可手动执行 `app.nextUnit()`。
+
+如果课程结构已确认安全，才可在控制台将 `app.configs.autoAdvanceNoVideo = true`，让脚本自动切换无视频小节。
 
 ### 1. 为什么有时会看到 `AbortError`
 
@@ -128,6 +135,17 @@ The play() request was interrupted by a call to pause()
 - 静音恢复链路可用
 
 目前重点保留的是稳定性，不再继续叠加额外功能。
+
+## 维护与验证
+
+修改 `v3_optimized.js` 后，执行：
+
+```bash
+node scripts/build-userscript.mjs
+node tests/verify-v3.mjs
+```
+
+第二条命令会验证两个入口的语法，并确认油猴脚本与唯一源码完全一致。
 
 
 ## 免责声明
