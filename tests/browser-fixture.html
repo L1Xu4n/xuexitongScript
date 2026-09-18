@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学习通助手 · 本地回归验证</title>
+<style>
+  body { margin: 24px; font: 15px/1.6 system-ui; color: #183329; background: #f5f7f7; }
+  main { max-width: 860px; margin: auto; }
+  h1 { font-size: 22px; }
+  #coursetree { border-bottom: 1px solid #b4c9c0; padding: 10px 0; }
+  .posCatalog_select { display: inline-block; margin-right: 18px; }
+  .posCatalog_active { color: #05643a; font-weight: 700; }
+  .posCatalog_name { cursor: pointer; }
+  video { width: 280px; max-width: 100%; aspect-ratio: 16/9; display: block; margin: 12px 0; background: #0c211a; }
+  iframe { width: 280px; max-width: 100%; height: 160px; border: 1px solid #879d95; }
+  ol { padding-left: 24px; }
+</style>
+<main>
+  <h1>本地回归验证</h1>
+  <p id="result" role="status">正在生成本地测试媒体</p>
+  <div id="coursetree"><ul><li>
+    <div class="posCatalog_select posCatalog_active" id="first-unit"><span class="posCatalog_name">第一小节</span></div>
+    <div class="posCatalog_select" id="second-unit"><span class="posCatalog_name">第二小节</span></div>
+  </li></ul></div>
+  <div id="resources"></div>
+  <ol id="events" aria-label="验证事件"></ol>
+</main>
+<script src="browser-fixture.js"></script>
+</html>

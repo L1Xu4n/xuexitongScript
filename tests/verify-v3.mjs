@@ -14,6 +14,14 @@ const payload = userScript.slice(markerIndex + marker.length);
 const source = readFileSync(sourcePath, 'utf8');
 if (payload !== source) throw new Error('油猴脚本未由 v3_optimized.js 同步生成');
 
+// 三处版本与面板显示必须相同，防止导入后仍显示旧版本或重复安装。
+const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
+const lock = JSON.parse(readFileSync(resolve(root, 'package-lock.json'), 'utf8'));
+const version = userScript.match(/^\/\/ @version\s+(\S+)$/m)?.[1];
+if (version !== pkg.version || lock.version !== version || lock.packages[''].version !== version ||
+    !source.includes(`<small>${version}</small>`)) throw new Error('版本号与面板显示未同步');
+
 execFileSync(process.execPath, ['--check', sourcePath], { stdio: 'inherit' });
 execFileSync(process.execPath, ['--check', userScriptPath], { stdio: 'inherit' });
-console.log('V3 source and userscript payload are synchronized and syntactically valid.');
+execFileSync(process.execPath, ['--check', resolve(root, 'tests/browser-fixture.js')], { stdio: 'inherit' });
+console.log(`V${version} source, userscript, package and lockfile are synchronized and syntactically valid.`);

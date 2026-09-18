@@ -1,0 +1,13 @@
+{
+  "name": "xuexitong-script-local-fix",
+  "version": "3.4.4",
+  "private": true,
+  "description": "Native DOM learning-resource navigation userscript",
+  "scripts": {
+    "build": "node scripts/build-userscript.mjs",
+    "check": "node tests/verify-v3.mjs",
+    "test": "node --test tests/player.test.cjs"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "jsdom": "26.1.0" }
+}
